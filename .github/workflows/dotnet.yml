@@ -11,6 +11,8 @@ on:
 
 jobs:
   build:
+  defaults:
+./WeatherAppNoi
 
     runs-on: ubuntu-latest
 
