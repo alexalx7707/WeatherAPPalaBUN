@@ -1,0 +1,2 @@
+# WeatherAPPalaBUN
+proiect pentru SE
