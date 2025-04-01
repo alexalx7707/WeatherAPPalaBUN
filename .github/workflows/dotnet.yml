@@ -11,8 +11,9 @@ on:
 
 jobs:
   build:
-  defaults:
-./WeatherAppNoi
+    defaults:
+      run:
+        working-directory: ./WeatherAppNoi
 
     runs-on: ubuntu-latest
 
