@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Login";
+    ViewBag.ActivePage = "Login";
+}
+
+<!-- Login Section -->
+<section class="login-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body p-5">
+                        <ul class="nav nav-tabs mb-4" id="authTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login-tab-pane" type="button" role="tab" aria-controls="login-tab-pane" aria-selected="true">Login</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup-tab-pane" type="button" role="tab" aria-controls="signup-tab-pane" aria-selected="false">Sign Up</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="authTabsContent">
+                            <!-- Login Tab -->
+                            <div class="tab-pane fade show active" id="login-tab-pane" role="tabpanel" aria-labelledby="login-tab" tabindex="0">
+                                <form asp-controller="Account" asp-action="Login" method="post">
+                                    <div class="mb-3">
+                                        <label for="login-email" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="login-email" name="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="login-password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="login-password" name="password" required>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+                                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Login</button>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <a asp-controller="Account" asp-action="ForgotPassword" class="text-decoration-none">Forgot password?</a>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Sign Up Tab -->
+                            <div class="tab-pane fade" id="signup-tab-pane" role="tabpanel" aria-labelledby="signup-tab" tabindex="0">
+                                <form asp-controller="Account" asp-action="Register" method="post">
+                                    <div class="mb-3">
+                                        <label for="signup-fullname" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="signup-fullname" name="fullName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signup-email" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="signup-email" name="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signup-password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="signup-password" name="password" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signup-confirm-password" class="form-label">Confirm Password</label>
+                                        <input type="password" class="form-control" id="signup-confirm-password" name="confirmPassword" required>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Create Account</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
