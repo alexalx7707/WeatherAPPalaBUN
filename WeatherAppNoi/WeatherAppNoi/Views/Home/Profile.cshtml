@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "My Profile";
+    ViewBag.ActivePage = "Profile";
+
+    // Get data from ViewBag
+    var userName = ViewBag.UserName ?? "User";
+    var favorites = ViewBag.FavoriteLocations ?? new object[0];
+}
+
+<!-- Profile Section -->
+<section class="profile-section py-5">
+    <div class="container">
+        <div class="row">
+            <!-- User Info -->
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="profile-icon me-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="mb-0">@userName</h2>
+                        </div>
+                        <div class="ms-auto">
+                            <button class="btn btn-outline-primary">Edit Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorite Locations -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">Favorite Locations</h3>
+                        <button class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                            </svg>
+                            Add Location
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var location in favorites)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h5 class="card-title mb-0">@location.City</h5>
+                                                <div>
+                                                    <button class="btn btn-sm btn-outline-danger me-1" title="Remove from favorites">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                        </svg>
+                                                    </button>
+                                                    <a href="@Url.Action("Current", "Home", new { location = location.City })" class="btn btn-sm btn-outline-primary" title="View details">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                                                        </svg>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="display-4 me-3">@location.Temperature</div>
+                                                <div>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
+                                                        <path d="M7 8a3.5 3.5 0 0 1 3.5 3.555.5.5 0 0 0 .624.492A1.503 1.503 0 0 1 13 13.5a1.5 1.5 0 0 1-1.5 1.5H3a2 2 0 1 1 .1-3.998.5.5 0 0 0 .51-.375A3.502 3.502 0 0 1 7 8zm4.473 3a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5h-.027z" />
+                                                        <path d="M10.5 1.5a.5.5 0 0 0-1 0v1a.5.5 0 0 0 1 0v-1zm3.743 1.964a.5.5 0 1 0-.707-.707l-.708.707a.5.5 0 0 0 .708.708l.707-.708zm-7.779-.707a.5.5 0 0 0-.707.707l.707.708a.5.5 0 1 0 .708-.708l-.708-.707zm1.734 3.374a2 2 0 1 1 3.296 2.198c.199.281.372.582.516.898a3 3 0 1 0-4.84-3.225c.352.011.696.055 1.028.129zm4.484 4.074c.6.215.604.504.587.805a2 2 0 0 1-2.591 1.941l-.005-.001-.488.111a2 2 0 0 1-2.416-1.13.5.5 0 0 0-.184-.211l-.007-.002a2 2 0 0 1-.6-2.457 5.03 5.03 0 0 0-1.673-.246.5.5 0 0 0-.498.45 2 2 0 0 1-2.002 2.05H3a1 1 0 0 1 0-2h.013a1 1 0 0 0 .193-.007.5.5 0 0 0 .343-.18 1 1 0 0 1 .291-.17 5 5 0 0 1 8.73 4.005z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <p>@location.Condition</p>
+                                            <p class="small text-muted mb-0">H: @location.HighTemperature | L: @location.LowTemperature</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

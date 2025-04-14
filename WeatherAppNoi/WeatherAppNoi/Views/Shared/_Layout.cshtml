@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherNow - @ViewBag.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true">
+    <base href="~/" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">WeatherNow</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewBag.ActivePage == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewBag.ActivePage == "Login" ? "active" : "")" href="@Url.Action("Login", "Home")">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewBag.ActivePage == "Current" ? "active" : "")" href="@Url.Action("Current", "Home")">Current Weather</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewBag.ActivePage == "Forecast" ? "active" : "")" href="@Url.Action("Forecast", "Home")">Forecast</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewBag.ActivePage == "Profile" ? "active" : "")" href="@Url.Action("Profile", "Home")">My Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewBag.ActivePage == "About" ? "active" : "")" href="@Url.Action("About", "Home")">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <!-- Empty cols 1-3 -->
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+
+                <!-- Column 4: WeatherNow -->
+                <div class="col-2 text-right">
+                    <h5>WeatherNow</h5>
+                    <p>Providing accurate weather information since 2023.</p>
+                </div>
+
+                <!-- Empty cols 5-7 -->
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+
+                <!-- Column 8-9: Quick Links -->
+                <div class="col-2 text-left">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="@Url.Action("Index", "Home")" class="text-white">Home</a></li>
+                        <li><a href="@Url.Action("Login", "Home")" class="text-white">Login</a></li>
+                        <li><a href="@Url.Action("Current", "Home")" class="text-white">Current Weather</a></li>
+                        <li><a href="@Url.Action("Forecast", "Home")" class="text-white">Forecast</a></li>
+                        <li><a href="@Url.Action("Profile", "Home")" class="text-white">My Profile</a></li>
+                        <li><a href="@Url.Action("About", "Home")" class="text-white">About</a></li>
+                    </ul>
+                </div>
+
+                <!-- Empty cols 10-12 -->
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+            </div>
+            <div class="text-center mt-3">
+                <p>&copy; @DateTime.Now.Year WeatherNow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/script.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
