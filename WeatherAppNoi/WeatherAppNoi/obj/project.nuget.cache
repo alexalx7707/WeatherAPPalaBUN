@@ -1,6 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "I6lepb2QpqI=",
+
+  "dgSpecHash": "bSWnTbOUiCo=",
+
   "success": true,
   "projectFilePath": "C:\\Users\\Alex\\Source\\Repos\\WeatherAPPalaBUN\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj",
   "expectedPackageFiles": [
