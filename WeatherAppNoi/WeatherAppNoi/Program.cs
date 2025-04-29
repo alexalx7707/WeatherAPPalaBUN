@@ -2,11 +2,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WeatherAppNoi.Data;
 using WeatherAppNoi.Models;
+using WeatherAppNoi.Services; // Add this line for your WeatherService
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add HttpClient
+builder.Services.AddHttpClient();
+
+// Register your WeatherService
+builder.Services.AddScoped<WeatherService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -30,7 +37,6 @@ builder.Services.AddIdentityCore<User>(opt =>
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,15 +49,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapStaticAssets();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

@@ -9,7 +9,7 @@ namespace WeatherAppNoi.Data
     {
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<WeatherData> WeatherData { get; set; } = null!;
-        ///////////////////////////////
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<UserRole>()
