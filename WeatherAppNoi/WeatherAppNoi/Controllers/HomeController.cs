@@ -1,72 +1,75 @@
-using System.Diagnostics;
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WeatherAppNoi.Models;
+using WeatherAppNoi.Services;
 
-namespace WeatherAPP2.Controllers
+namespace WeatherAppNoi.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly WeatherService _weatherService;
+
+        public HomeController(WeatherService weatherService)
+        {
+            _weatherService = weatherService;
+        }
+
         public IActionResult Index()
         {
-            ViewBag.Title = "Home";
-            ViewBag.ActivePage = "Home";
             return View();
         }
 
-        public IActionResult Login()
+        [HttpPost]
+        public async Task<IActionResult> GetWeather(string cityName)
         {
-            ViewBag.Title = "Login";
-            ViewBag.ActivePage = "Login";
-            return View();
+            if (string.IsNullOrWhiteSpace(cityName))
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                var weatherData = await _weatherService.GetCurrentWeatherAsync(cityName);
+                ViewBag.WeatherData = weatherData;
+                return View("Index");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                ViewBag.ErrorMessage = $"Could not retrieve weather data: {ex.Message}";
+                return View("Index");
+            }
         }
 
-        public IActionResult Current()
+        [HttpGet]
+        public async Task<IActionResult> CurrentWeather(string city)
         {
-            ViewBag.Title = "Current Weather";
-            ViewBag.ActivePage = "Current";
-            return View();
+            if (string.IsNullOrWhiteSpace(city))
+            {
+                return View();
+            }
+
+            try
+            {
+                var weatherData = await _weatherService.GetCurrentWeatherAsync(city);
+                return View(weatherData);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                ViewBag.ErrorMessage = $"Could not retrieve weather data: {ex.Message}";
+                return View();
+            }
         }
 
+        [HttpGet]
         public IActionResult Forecast()
         {
-            ViewBag.Title = "Forecast";
-            ViewBag.ActivePage = "Forecast";
+            // Implementation for forecast view (would be similar to CurrentWeather)
             return View();
         }
 
-        public IActionResult Profile()
-        {
-            ViewBag.Title = "My Profile";
-            ViewBag.ActivePage = "Profile";
-
-            // Create dummy data directly in ViewBag
-            ViewBag.UserName = "John Doe";
-            ViewBag.FavoriteLocations = new[]
-            {
-            new {
-                City = "New York, NY",
-                Temperature = "72°F",
-                Condition = "Partly Cloudy",
-                HighTemperature = "77°F",
-                LowTemperature = "65°F"
-            },
-            new {
-                City = "Bucharest, Romania",
-                Temperature = "58°F",
-                Condition = "Mostly Cloudy",
-                HighTemperature = "62°F",
-                LowTemperature = "53°F"
-            }
-        };
-
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            ViewBag.Title = "About";
-            ViewBag.ActivePage = "About";
-            return View();
-        }
+        // Add other controller actions as needed
     }
 }

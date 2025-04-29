@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Alex\\Source\\Repos\\WeatherAPPalaBUN\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj": {}
+    "C:\\Users\\Alex\\source\\repos\\WAPP\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Alex\\Source\\Repos\\WeatherAPPalaBUN\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj": {
+    "C:\\Users\\Alex\\source\\repos\\WAPP\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Alex\\Source\\Repos\\WeatherAPPalaBUN\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj",
+        "projectUniqueName": "C:\\Users\\Alex\\source\\repos\\WAPP\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj",
         "projectName": "WeatherAppNoi",
-        "projectPath": "C:\\Users\\Alex\\Source\\Repos\\WeatherAPPalaBUN\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj",
+        "projectPath": "C:\\Users\\Alex\\source\\repos\\WAPP\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj",
         "packagesPath": "C:\\Users\\Alex\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Alex\\Source\\Repos\\WeatherAPPalaBUN\\WeatherAppNoi\\WeatherAppNoi\\obj\\",
+        "outputPath": "C:\\Users\\Alex\\source\\repos\\WAPP\\WeatherAppNoi\\WeatherAppNoi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

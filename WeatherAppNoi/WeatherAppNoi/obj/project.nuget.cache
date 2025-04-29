@@ -1,10 +1,8 @@
 {
   "version": 2,
-
-  "dgSpecHash": "bSWnTbOUiCo=",
-
+  "dgSpecHash": "ZacredbzGD8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Alex\\Source\\Repos\\WeatherAPPalaBUN\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj",
+  "projectFilePath": "C:\\Users\\Alex\\source\\repos\\WAPP\\WeatherAppNoi\\WeatherAppNoi\\WeatherAppNoi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Alex\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Alex\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
