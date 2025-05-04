@@ -48,6 +48,13 @@ namespace WeatherAppNoi.Services
 
         private WeatherData MapToWeatherData(WeatherApiResponse response)
         {
+
+            // Create a DateTimeOffset from the UTC timestamp
+            var utcTime = DateTimeOffset.FromUnixTimeSeconds(response.Dt);
+
+            // Apply the timezone offset (converting from seconds to hours)
+            var localTime = utcTime.ToOffset(TimeSpan.FromSeconds(response.Timezone));
+
             return new WeatherData
             {
                 CityName = response.Name,
@@ -59,7 +66,7 @@ namespace WeatherAppNoi.Services
                 WindSpeed = response.Wind.Speed,
                 WeatherDescription = response.Weather[0].Description,
                 WeatherIcon = response.Weather[0].Icon,
-                TimeStamp = DateTimeOffset.FromUnixTimeSeconds(response.Dt).DateTime
+                TimeStamp = localTime.DateTime
             };
         }
 
@@ -72,6 +79,7 @@ namespace WeatherAppNoi.Services
             public string Name { get; set; }
             public SysData Sys { get; set; }
             public long Dt { get; set; }
+            public int Timezone { get; set; } // Timezone shift from UTC in seconds
         }
 
         private class MainData
