@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WeatherNow - @ViewBag.Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true">
+    @{
+        var themeService = Context.RequestServices.GetService<WeatherAppNoi.Services.ThemeService>();
+        var currentTheme = themeService?.GetCurrentTheme() ?? "light";
+    }
+    <link id="theme-css" rel="stylesheet" href="~/css/theme-@(currentTheme).css" asp-append-version="true">
     <base href="~/" />
     @RenderSection("Styles", required: false)
 </head>
@@ -37,6 +43,9 @@
                     <li class="nav-item">
                         <a class="nav-link @(ViewBag.ActivePage == "About" ? "active" : "")" href="@Url.Action("About", "Home")">About</a>
                     </li>
+                    <li class="nav-item">
+                        @await Component.InvokeAsync("ThemeSwitcher")
+                    </li>
                 </ul>
             </div>
         </div>
@@ -47,6 +56,7 @@
     <!-- Footer -->
     <footer class="bg-dark text-white py-4">
         <div class="container">
+            <!-- Footer content remains unchanged -->
             <div class="row">
                 <!-- Empty cols 1-3 -->
                 <div class="col-1"></div>

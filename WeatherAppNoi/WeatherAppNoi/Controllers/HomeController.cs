@@ -42,6 +42,14 @@ namespace WeatherAppNoi.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult SetThemePreference(string theme)
+        {
+            var themeService = HttpContext.RequestServices.GetRequiredService<ThemeService>();
+            themeService.SetThemePreference(theme);
+            return Ok();
+        }
+
         [HttpGet]
         public async Task<IActionResult> CurrentWeather(string city)
         {

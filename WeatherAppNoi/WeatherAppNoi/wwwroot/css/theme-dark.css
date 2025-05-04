@@ -1,0 +1,53 @@
+﻿:root {
+    --body-bg: #212529;
+    --text-color: #f8f9fa;
+    --navbar-bg: #343a40;
+    --navbar-text: #ffffff;
+    --card-bg: #343a40;
+    --card-border: rgba(255, 255, 255, 0.125);
+    --footer-bg: #121416;
+    --footer-text: #f8f9fa;
+    --input-bg: #2b3035;
+    --input-border: #495057;
+}
+
+body {
+    background-color: var(--body-bg);
+    color: var(--text-color);
+}
+
+.navbar.navbar-dark {
+    background-color: var(--navbar-bg) !important;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    color: var(--text-color);
+}
+
+.list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    color: var(--text-color);
+}
+
+.bg-light {
+    background-color: #2b3035 !important;
+}
+
+.form-control {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-color);
+}
+
+footer.bg-dark {
+    background-color: var(--footer-bg) !important;
+    color: var(--footer-text);
+}
+
+/* Fix for text visibility in inputs and cards */
+.form-control::placeholder {
+    color: #adb5bd;
+}
