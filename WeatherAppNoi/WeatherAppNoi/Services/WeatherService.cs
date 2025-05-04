@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using WeatherAppNoi.Models;
@@ -27,6 +28,10 @@ namespace WeatherAppNoi.Services
                 response.EnsureSuccessStatusCode();
 
                 var content = await response.Content.ReadAsStringAsync();
+
+                // For debugging - log the raw JSON to see what's coming back
+                Console.WriteLine($"API Response: {content}");
+
                 var weatherResponse = JsonSerializer.Deserialize<WeatherApiResponse>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -72,7 +77,10 @@ namespace WeatherAppNoi.Services
         private class MainData
         {
             public double Temp { get; set; }
+
+            [JsonPropertyName("feels_like")]
             public double FeelsLike { get; set; }
+
             public int Humidity { get; set; }
             public int Pressure { get; set; }
         }
