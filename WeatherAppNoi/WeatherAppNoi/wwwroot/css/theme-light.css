@@ -1,0 +1,40 @@
+﻿:root {
+    --body-bg: #f8f9fa;
+    --text-color: #212529;
+    --navbar-bg: #0d6efd;
+    --navbar-text: #ffffff;
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.125);
+    --footer-bg: #343a40;
+    --footer-text: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+}
+
+body {
+    background-color: var(--body-bg);
+    color: var(--text-color);
+}
+
+.navbar.navbar-dark {
+    background-color: var(--navbar-bg) !important;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+}
+
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.form-control {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+}
+
+footer.bg-dark {
+    background-color: var(--footer-bg) !important;
+    color: var(--footer-text);
+}
