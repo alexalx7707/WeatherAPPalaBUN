@@ -1,6 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+
+@{
+    var themeService = Context.RequestServices.GetService<WeatherAppNoi.Services.ThemeService>();
+    var currentTheme = themeService?.GetCurrentTheme() ?? "light";
+    var buttonClass = currentTheme == "light" ? "btn-outline-primary" : "btn-outline-primary";
+}
+
 <header class="hero-section">
     <div class="container h-100">
         <div class="row h-100 align-items-center">
@@ -11,7 +18,7 @@
                     <div class="search-container mt-4">
                         <form class="d-flex" method="post" asp-controller="Home" asp-action="GetWeather">
                             <input class="form-control me-2" type="search" name="cityName" placeholder="Enter city name" aria-label="Search" required>
-                            <button class="btn btn-outline-light" type="submit">Check Weather</button>
+                            <button class="btn @buttonClass" type="submit">Check Weather</button>
                         </form>
                     </div>
                     <div class="mt-4">

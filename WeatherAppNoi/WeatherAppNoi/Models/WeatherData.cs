@@ -4,6 +4,7 @@ namespace WeatherAppNoi.Models
 {
     public class WeatherData
     {
+        public int Id { get; set; }
         public string CityName { get; set; }
         public string Country { get; set; }
         public double Temperature { get; set; }

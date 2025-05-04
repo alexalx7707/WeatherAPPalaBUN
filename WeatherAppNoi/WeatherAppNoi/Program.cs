@@ -12,6 +12,11 @@ builder.Services.AddControllersWithViews();
 // Add HttpClient
 builder.Services.AddHttpClient();
 
+// Add HttpContext accessor for theme service
+builder.Services.AddHttpContextAccessor();
+// Register ThemeService
+builder.Services.AddScoped<ThemeService>();
+
 // Register your WeatherService
 builder.Services.AddScoped<WeatherService>();
 

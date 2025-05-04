@@ -1,0 +1,31 @@
+﻿@model string
+
+<div class="theme-switcher">
+    <div class="form-check form-switch ms-2">
+        <input class="form-check-input" type="checkbox" id="themeSwitcher" @(Model == "dark" ? "checked" : "")>
+        <label class="form-check-label" for="themeSwitcher">
+            <i class="bi bi-moon-stars"></i>
+        </label>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const themeSwitcher = document.getElementById('themeSwitcher');
+
+        themeSwitcher.addEventListener('change', function() {
+            const newTheme = this.checked ? 'dark' : 'light';
+            updateTheme(newTheme);
+
+            // Send theme preference to server
+            fetch('/Home/SetThemePreference?theme=' + newTheme, {
+                method: 'POST'
+            });
+        });
+
+        function updateTheme(theme) {
+            const linkElement = document.getElementById('theme-css');
+            linkElement.href = `/css/theme-${theme}.css`;
+        }
+    });
+</script>
