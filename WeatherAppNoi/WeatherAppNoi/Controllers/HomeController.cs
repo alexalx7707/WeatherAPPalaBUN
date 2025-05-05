@@ -78,6 +78,34 @@ namespace WeatherAppNoi.Controllers
             return View();
         }
 
-        // Add other controller actions as needed
+        [HttpGet]
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Current()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Profile()
+        {
+            return View();
+        }
     }
 }
