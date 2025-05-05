@@ -14,6 +14,27 @@
     <link id="theme-css" rel="stylesheet" href="~/css/theme-@(currentTheme).css" asp-append-version="true">
     <base href="~/" />
     @RenderSection("Styles", required: false)
+    <style>
+        /* Ensure footer sticks to the bottom */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        .theme-switcher {
+            margin-left: 15px; /* Adjust spacing to align with navbar items */
+        }
+
+        .navbar-nav .theme-switcher {
+            display: flex;
+            align-items: center; /* Align vertically with other navbar items */
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -24,7 +45,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
                         <a class="nav-link @(ViewBag.ActivePage == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">Home</a>
                     </li>
@@ -43,7 +64,8 @@
                     <li class="nav-item">
                         <a class="nav-link @(ViewBag.ActivePage == "About" ? "active" : "")" href="@Url.Action("About", "Home")">About</a>
                     </li>
-                    <li class="nav-item">
+                    <!-- Move ThemeSwitcher to align with navbar items -->
+                    <li class="nav-item theme-switcher">
                         @await Component.InvokeAsync("ThemeSwitcher")
                     </li>
                 </ul>
@@ -51,12 +73,13 @@
         </div>
     </nav>
 
-    @RenderBody()
+    <main>
+        @RenderBody()
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
+    <footer class="bg-dark text-white py-4 mt-auto">
         <div class="container">
-            <!-- Footer content remains unchanged -->
             <div class="row">
                 <!-- Empty cols 1-3 -->
                 <div class="col-1"></div>
