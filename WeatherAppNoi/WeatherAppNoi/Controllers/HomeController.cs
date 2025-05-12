@@ -72,10 +72,25 @@ namespace WeatherAppNoi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Forecast()
+        public async Task<IActionResult> Forecast(string location)
         {
-            // Implementation for forecast view (would be similar to CurrentWeather)
-            return View();
+
+            if (string.IsNullOrWhiteSpace(location))
+            {
+                return View();
+            }
+
+            try
+            {
+                var forecastData = await _weatherService.GetForecastAsync(location);
+                return View(forecastData);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                ViewBag.ErrorMessage = $"Could not retrieve forecast data: {ex.Message}";
+                return View();
+            }
         }
 
         [HttpGet]
