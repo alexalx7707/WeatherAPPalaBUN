@@ -13,6 +13,15 @@ namespace WeatherAppNoi.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public string GetTimeBasedBackground()
+        {
+            // Check if it's between 7PM (19) and 7AM (7)
+            var currentHour = DateTime.Now.Hour;
+            return (currentHour >= 19 || currentHour < 7)
+                ? "/images/backgrounds/day-bg.jpg"
+                : "/images/backgrounds/night-bg.png";
+        }
+
         public string GetCurrentTheme()
         {
             // Check for user preference in cookie first
