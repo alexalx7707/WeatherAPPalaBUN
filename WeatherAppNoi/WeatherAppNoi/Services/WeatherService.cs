@@ -80,6 +80,7 @@ namespace WeatherAppNoi.Services
             public SysData Sys { get; set; }
             public long Dt { get; set; }
             public int Timezone { get; set; } // Timezone shift from UTC in seconds
+            public CoordData Coord { get; set; }
         }
 
         private class MainData
@@ -91,6 +92,10 @@ namespace WeatherAppNoi.Services
 
             public int Humidity { get; set; }
             public int Pressure { get; set; }
+            [JsonPropertyName("temp_max")]
+            public double TempMax { get; set; }
+            [JsonPropertyName("temp_min")]
+            public double TempMin { get; set; }
         }
 
         private class WeatherItem
@@ -107,6 +112,140 @@ namespace WeatherAppNoi.Services
         private class SysData
         {
             public string Country { get; set; }
+        }
+
+        public async Task<ForecastData> GetForecastAsync(string cityName)
+        {
+            try
+            {
+                // Use the 5-day/3-hour forecast API instead of One Call
+                var response = await _httpClient.GetAsync($"{_baseUrl}forecast?q={cityName}&units=metric&appid={_apiKey}");
+                response.EnsureSuccessStatusCode();
+
+                var content = await response.Content.ReadAsStringAsync();
+
+                // For debugging - log the raw JSON
+                Console.WriteLine($"Forecast API Response: {content}");
+
+                var forecastResponse = JsonSerializer.Deserialize<Forecast5DayResponse>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return MapToForecastDataFrom5Day(forecastResponse);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                throw new Exception($"Error fetching forecast data: {ex.Message}", ex);
+            }
+        }
+
+
+        private ForecastData MapToForecastDataFrom5Day(Forecast5DayResponse response)
+        {
+            var forecastData = new ForecastData
+            {
+                CityName = response.City.Name,
+                Country = response.City.Country
+            };
+
+            // Group forecast data by day - taking the data around noon for each day
+            var forecastsByDay = response.List
+                .GroupBy(f => DateTimeOffset.FromUnixTimeSeconds(f.Dt).DateTime.Date)
+                .Take(7) // Take 7 days at most
+                .ToList();
+
+            foreach (var dayGroup in forecastsByDay)
+            {
+                // Get forecast item closest to noon for this day
+                var dayForecast = dayGroup
+                    .OrderBy(f => Math.Abs(DateTimeOffset.FromUnixTimeSeconds(f.Dt).DateTime.Hour - 12))
+                    .First();
+
+                var date = DateTimeOffset.FromUnixTimeSeconds(dayForecast.Dt).DateTime;
+
+                var dailyForecast = new DailyForecast
+                {
+                    Date = date,
+                    TempMax = Math.Round(dayGroup.Max(f => f.Main.TempMax), 1),
+                    TempMin = Math.Round(dayGroup.Min(f => f.Main.TempMin), 1),
+                    FeelsLike = Math.Round(dayForecast.Main.FeelsLike, 1),
+                    Humidity = dayForecast.Main.Humidity,
+                    WindSpeed = dayForecast.Wind.Speed,
+                    Pressure = dayForecast.Main.Pressure,
+                    Precipitation = (int)(dayForecast.Pop * 100),
+                    WeatherDescription = dayForecast.Weather[0].Description,
+                    WeatherIcon = dayForecast.Weather[0].Icon
+                };
+
+                forecastData.DailyForecasts.Add(dailyForecast);
+            }
+
+            return forecastData;
+        }
+
+
+        private class Forecast5DayResponse
+        {
+            public List<ForecastItem> List { get; set; }
+            public CityData City { get; set; }
+        }
+
+        private class DailyData
+        {
+            public long Dt { get; set; }
+            public TempData Temp { get; set; }
+            public FeelsLikeData FeelsLike { get; set; }
+            public int Humidity { get; set; }
+            public double WindSpeed { get; set; }
+            public int Pressure { get; set; }
+            public double Pop { get; set; } // Probability of precipitation (0-1)
+            public List<WeatherItem> Weather { get; set; }
+        }
+
+        private class ForecastItem
+        {
+            public long Dt { get; set; }
+            public MainData Main { get; set; }
+            public List<WeatherItem> Weather { get; set; }
+            public CloudData Clouds { get; set; }
+            public WindData Wind { get; set; }
+            public double Pop { get; set; } // Probability of precipitation
+            public string DtTxt { get; set; } // Date/time text
+        }
+
+        private class CityData
+        {
+            public string Name { get; set; }
+            public string Country { get; set; }
+            public long Sunrise { get; set; }
+            public long Sunset { get; set; }
+        }
+
+        private class TempData
+        {
+            public double Min { get; set; }
+            public double Max { get; set; }
+            public double Day { get; set; }
+            public double Night { get; set; }
+        }
+
+        private class FeelsLikeData
+        {
+            public double Day { get; set; }
+            public double Night { get; set; }
+        }
+
+        private class CloudData
+        {
+            public int All { get; set; } // Cloudiness percentage
+        }
+
+        private class CoordData
+        {
+            public double Lat { get; set; }
+            public double Lon { get; set; }
         }
     }
 }
