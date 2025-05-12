@@ -11,6 +11,10 @@
     --input-border: #495057;
 }
 
+.text-muted {
+    color: #adb5bd !important; 
+}
+
 body {
     background-color: var(--body-bg);
     color: var(--text-color);
