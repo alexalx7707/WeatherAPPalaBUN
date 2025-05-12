@@ -1,7 +1,7 @@
 ﻿@model WeatherAppNoi.Models.ForecastData
 
 @{
-    ViewBag.Title = "7-Day Forecast";
+    ViewBag.Title = "6-Day Forecast";
     ViewBag.ActivePage = "Forecast";
 }
 
@@ -36,11 +36,11 @@
             <div class="col-12">
                 @if (Model != null)
                 {
-                    <h2>7-Day Forecast for @Model.CityName, @Model.Country</h2>
+                    <h2>6-Day Forecast for @Model.CityName, @Model.Country</h2>
                 }
                 else
                 {
-                    <h2>7-Day Forecast</h2>
+                    <h2>6-Day Forecast</h2>
                     <p class="lead">Enter a location to see the weather forecast.</p>
                 }
             </div>
@@ -81,7 +81,7 @@
                 }
             </div>
 
-            <!-- Rest of the 7-day forecast -->
+            <!-- Rest of the 6-day forecast -->
             <div class="row">
                 @for (int i = 4; i < Model.DailyForecasts.Count; i++)
                 {
