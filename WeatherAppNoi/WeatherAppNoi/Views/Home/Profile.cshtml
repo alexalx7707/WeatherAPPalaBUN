@@ -1,10 +1,12 @@
-﻿@{
+﻿@using WeatherAppNoi.Models
+
+@{
     ViewBag.Title = "My Profile";
     ViewBag.ActivePage = "Profile";
 
-    // Get data from ViewBag
+    // Get data from ViewBag with proper typing
     var userName = ViewBag.UserName ?? "User";
-    var favorites = ViewBag.FavoriteLocations ?? new object[0];
+    var favorites = ViewBag.FavoriteLocations as List<FavoriteLocationWeatherViewModel> ?? new List<FavoriteLocationWeatherViewModel>();
 }
 
 <!-- Profile Section -->
@@ -25,7 +27,9 @@
                             <h2 class="mb-0">@userName</h2>
                         </div>
                         <div class="ms-auto">
-                            <button class="btn btn-outline-primary">Edit Profile</button>
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                <button type="submit" class="btn btn-outline-danger">Logout</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -36,7 +40,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h3 class="mb-0">Favorite Locations</h3>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLocationModal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
                             </svg>
@@ -44,47 +48,198 @@
                         </button>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            @foreach (var location in favorites)
-                            {
-                                <div class="col-md-6 mb-3">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <h5 class="card-title mb-0">@location.City</h5>
-                                                <div>
-                                                    <button class="btn btn-sm btn-outline-danger me-1" title="Remove from favorites">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                                        </svg>
-                                                    </button>
-                                                    <a href="@Url.Action("Current", "Home", new { location = location.City })" class="btn btn-sm btn-outline-primary" title="View details">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                                                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-                                                        </svg>
-                                                    </a>
+                        @if (favorites != null && favorites.Any())
+                        {
+                            <div class="row" id="favorites-container">
+                                @foreach (var location in favorites)
+                                {
+                                    <div class="col-md-6 mb-3" data-favorite-id="@location.Id">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title mb-0">@location.City, @location.Country</h5>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-outline-danger me-1 remove-favorite"
+                                                                data-favorite-id="@location.Id"
+                                                                title="Remove from favorites">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                            </svg>
+                                                        </button>
+                                                        <a href="@Url.Action("CurrentWeather", "Home", new { city = location.City })"
+                                                           class="btn btn-sm btn-outline-primary"
+                                                           title="View details">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                                                            </svg>
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <div class="display-4 me-3">@location.Temperature</div>
-                                                <div>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
-                                                        <path d="M7 8a3.5 3.5 0 0 1 3.5 3.555.5.5 0 0 0 .624.492A1.503 1.503 0 0 1 13 13.5a1.5 1.5 0 0 1-1.5 1.5H3a2 2 0 1 1 .1-3.998.5.5 0 0 0 .51-.375A3.502 3.502 0 0 1 7 8zm4.473 3a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5h-.027z" />
-                                                        <path d="M10.5 1.5a.5.5 0 0 0-1 0v1a.5.5 0 0 0 1 0v-1zm3.743 1.964a.5.5 0 1 0-.707-.707l-.708.707a.5.5 0 0 0 .708.708l.707-.708zm-7.779-.707a.5.5 0 0 0-.707.707l.707.708a.5.5 0 1 0 .708-.708l-.708-.707zm1.734 3.374a2 2 0 1 1 3.296 2.198c.199.281.372.582.516.898a3 3 0 1 0-4.84-3.225c.352.011.696.055 1.028.129zm4.484 4.074c.6.215.604.504.587.805a2 2 0 0 1-2.591 1.941l-.005-.001-.488.111a2 2 0 0 1-2.416-1.13.5.5 0 0 0-.184-.211l-.007-.002a2 2 0 0 1-.6-2.457 5.03 5.03 0 0 0-1.673-.246.5.5 0 0 0-.498.45 2 2 0 0 1-2.002 2.05H3a1 1 0 0 1 0-2h.013a1 1 0 0 0 .193-.007.5.5 0 0 0 .343-.18 1 1 0 0 1 .291-.17 5 5 0 0 1 8.73 4.005z" />
-                                                    </svg>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="display-4 me-3">@location.Temperature</div>
+                                                    <div>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
+                                                            <path d="M7 8a3.5 3.5 0 0 1 3.5 3.555.5.5 0 0 0 .624.492A1.503 1.503 0 0 1 13 13.5a1.5 1.5 0 0 1-1.5 1.5H3a2 2 0 1 1 .1-3.998.5.5 0 0 0 .51-.375A3.502 3.502 0 0 1 7 8zm4.473 3a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5h-.027z" />
+                                                            <path d="M10.5 1.5a.5.5 0 0 0-1 0v1a.5.5 0 0 0 1 0v-1zm3.743 1.964a.5.5 0 1 0-.707-.707l-.708.707a.5.5 0 0 0 .708.708l.707-.708zm-7.779-.707a.5.5 0 0 0-.707.707l.707.708a.5.5 0 1 0 .708-.708l-.708-.707zm1.734 3.374a2 2 0 1 1 3.296 2.198c.199.281.372.582.516.898a3 3 0 1 0-4.84-3.225c.352.011.696.055 1.028.129zm4.484 4.074c.6.215.604.504.587.805a2 2 0 0 1-2.591 1.941l-.005-.001-.488.111a2 2 0 0 1-2.416-1.13.5.5 0 0 0-.184-.211l-.007-.002a2 2 0 0 1-.6-2.457 5.03 5.03 0 0 0-1.673-.246.5.5 0 0 0-.498.45 2 2 0 0 1-2.002 2.05H3a1 1 0 0 1 0-2h.013a1 1 0 0 0 .193-.007.5.5 0 0 0 .343-.18 1 1 0 0 1 .291-.17 5 5 0 0 1 8.73 4.005z" />
+                                                        </svg>
+                                                    </div>
                                                 </div>
+                                                <p>@location.Condition</p>
+                                                <p class="small text-muted mb-0">H: @location.HighTemperature | L: @location.LowTemperature</p>
                                             </div>
-                                            <p>@location.Condition</p>
-                                            <p class="small text-muted mb-0">H: @location.HighTemperature | L: @location.LowTemperature</p>
                                         </div>
                                     </div>
-                                </div>
-                            }
-                        </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <p class="text-muted">No favorite locations yet. Click "Add Location" to add your first favorite!</p>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Add Location Modal -->
+<div class="modal fade" id="addLocationModal" tabindex="-1" aria-labelledby="addLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addLocationModalLabel">Add Favorite Location</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addLocationForm">
+                    <div class="mb-3">
+                        <label for="cityName" class="form-label">City Name</label>
+                        <input type="text" class="form-control" id="cityName" name="cityName" required>
+                        <div class="form-text">Enter the name of the city you want to add to your favorites.</div>
+                        <div id="locationError" class="text-danger mt-2" style="display: none;"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="addLocationBtn">Add Location</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add location functionality
+            const addLocationBtn = document.getElementById('addLocationBtn');
+            const addLocationForm = document.getElementById('addLocationForm');
+            const cityNameInput = document.getElementById('cityName');
+            const locationError = document.getElementById('locationError');
+            const addLocationModal = new bootstrap.Modal(document.getElementById('addLocationModal'));
+
+            addLocationBtn.addEventListener('click', async function() {
+                const cityName = cityNameInput.value.trim();
+
+                if (!cityName) {
+                    showError('Please enter a city name');
+                    return;
+                }
+
+                addLocationBtn.disabled = true;
+                addLocationBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Adding...';
+
+                try {
+                    const response = await fetch('@Url.Action("AddFavoriteLocation", "Home")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `cityName=${encodeURIComponent(cityName)}`
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Close modal and reload page to show new favorite
+                        addLocationModal.hide();
+                        location.reload();
+                    } else {
+                        showError(result.message || 'Error adding location');
+                    }
+                } catch (error) {
+                    showError('Error adding location. Please try again.');
+                } finally {
+                    addLocationBtn.disabled = false;
+                    addLocationBtn.innerHTML = 'Add Location';
+                }
+            });
+
+            // Handle Enter key in the input field
+            cityNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addLocationBtn.click();
+                }
+            });
+
+            // Remove favorite functionality
+            document.querySelectorAll('.remove-favorite').forEach(button => {
+                button.addEventListener('click', async function() {
+                    const favoriteId = this.getAttribute('data-favorite-id');
+
+                    if (!confirm('Are you sure you want to remove this location from your favorites?')) {
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('@Url.Action("RemoveFavoriteLocation", "Home")', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `id=${favoriteId}`
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // Remove the card from UI
+                            const card = document.querySelector(`[data-favorite-id="${favoriteId}"]`);
+                            if (card) {
+                                card.remove();
+                            }
+
+                            // Check if any favorites remain
+                            const remainingFavorites = document.querySelectorAll('[data-favorite-id]');
+                            if (remainingFavorites.length === 0) {
+                                document.getElementById('favorites-container').innerHTML = `
+                                    <div class="text-center py-4">
+                                        <p class="text-muted">No favorite locations yet. Click "Add Location" to add your first favorite!</p>
+                                    </div>
+                                `;
+                            }
+                        }
+                    } catch (error) {
+                        alert('Error removing location. Please try again.');
+                    }
+                });
+            });
+
+            // Reset modal when closed
+            document.getElementById('addLocationModal').addEventListener('hidden.bs.modal', function () {
+                cityNameInput.value = '';
+                locationError.style.display = 'none';
+            });
+
+            function showError(message) {
+                locationError.textContent = message;
+                locationError.style.display = 'block';
+            }
+        });
+    </script>
+}
