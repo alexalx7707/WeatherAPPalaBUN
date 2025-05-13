@@ -7,9 +7,11 @@
 
         public User User { get; set; } = null!;
 
+        public int LocationId { get; set; }
+
         public Location Location { get; set; } = null!;
 
-        public string AlretType { get; set; } = string.Empty!;
+        public string AlertType { get; set; } = string.Empty!;
 
         public string Description { get; set; } = string.Empty!;
 

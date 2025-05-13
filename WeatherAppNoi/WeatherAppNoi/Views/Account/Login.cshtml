@@ -1,4 +1,6 @@
-﻿@{
+﻿@model WeatherAppNoi.Models.LoginViewModel
+
+@{
     ViewBag.Title = "Login";
     ViewBag.ActivePage = "Login";
 }
@@ -18,27 +20,40 @@
                                 <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup-tab-pane" type="button" role="tab" aria-controls="signup-tab-pane" aria-selected="false">Sign Up</button>
                             </li>
                         </ul>
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <div>@error.ErrorMessage</div>
+                                }
+                            </div>
+                        }
+
                         <div class="tab-content" id="authTabsContent">
                             <!-- Login Tab -->
                             <div class="tab-pane fade show active" id="login-tab-pane" role="tabpanel" aria-labelledby="login-tab" tabindex="0">
-                                <form asp-controller="Account" asp-action="Login" method="post">
+                                <form asp-action="Login" method="post">
                                     <div class="mb-3">
-                                        <label for="login-email" class="form-label">Email address</label>
-                                        <input type="email" class="form-control" id="login-email" name="email" required>
+                                        <label asp-for="Email" class="form-label">Email address</label>
+                                        <input asp-for="Email" class="form-control" required>
+                                        <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="login-password" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="login-password" name="password" required>
+                                        <label asp-for="Password" class="form-label">Password</label>
+                                        <input asp-for="Password" class="form-control" required>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
                                     </div>
                                     <div class="mb-3 form-check">
-                                        <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
-                                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        <input asp-for="RememberMe" class="form-check-input">
+                                        <label asp-for="RememberMe" class="form-check-label">Remember me</label>
                                     </div>
                                     <div class="d-grid">
                                         <button type="submit" class="btn btn-primary">Login</button>
                                     </div>
                                     <div class="text-center mt-3">
-                                        <a asp-controller="Account" asp-action="ForgotPassword" class="text-decoration-none">Forgot password?</a>
+                                        <a asp-action="ForgotPassword" class="text-decoration-none">Forgot password?</a>
                                     </div>
                                 </form>
                             </div>
@@ -48,19 +63,19 @@
                                 <form asp-controller="Account" asp-action="Register" method="post">
                                     <div class="mb-3">
                                         <label for="signup-fullname" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="signup-fullname" name="fullName" required>
+                                        <input type="text" class="form-control" id="signup-fullname" name="FullName" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="signup-email" class="form-label">Email address</label>
-                                        <input type="email" class="form-control" id="signup-email" name="email" required>
+                                        <input type="email" class="form-control" id="signup-email" name="Email" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="signup-password" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="signup-password" name="password" required>
+                                        <input type="password" class="form-control" id="signup-password" name="Password" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="signup-confirm-password" class="form-label">Confirm Password</label>
-                                        <input type="password" class="form-control" id="signup-confirm-password" name="confirmPassword" required>
+                                        <input type="password" class="form-control" id="signup-confirm-password" name="ConfirmPassword" required>
                                     </div>
                                     <div class="d-grid">
                                         <button type="submit" class="btn btn-primary">Create Account</button>
@@ -74,3 +89,20 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Switch to signup tab if there were validation errors during registration
+        @if (TempData["ShowRegisterTab"] != null)
+        {
+            <text>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const signupTab = new bootstrap.Tab(document.getElementById('signup-tab'));
+                        signupTab.show();
+                    });
+            </text>
+        }
+    </script>
+}

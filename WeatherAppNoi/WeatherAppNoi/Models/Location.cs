@@ -14,8 +14,7 @@
 
         public float Longitude { get; set; }
 
-        public int FavoriteLocationId { get; set; }
-
-        public FavoriteLocation FavoriteLocation { get; set; } = null!;
+        // Navigation property for FavoriteLocation
+        public FavoriteLocation? FavoriteLocation { get; set; }
     }
 }
