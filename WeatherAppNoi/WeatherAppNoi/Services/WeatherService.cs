@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using WeatherAppNoi.Models;
 
@@ -13,15 +14,28 @@ namespace WeatherAppNoi.Services
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
         private readonly string _baseUrl = "https://api.openweathermap.org/data/2.5/";
+        private readonly IMemoryCache _cache;
 
-        public WeatherService(HttpClient httpClient, IConfiguration configuration)
+        public WeatherService(HttpClient httpClient, IConfiguration configuration, IMemoryCache cache)
         {
             _httpClient = httpClient;
             _apiKey = "83e780119d9072fb1cb275bdc37227f2";
+            _cache = cache;
         }
 
         public async Task<WeatherData> GetCurrentWeatherAsync(string cityName)
         {
+            string normalizedCityName = cityName.Trim().ToLowerInvariant();
+            string cacheKey = $"weather_{normalizedCityName}";
+
+            if (_cache.TryGetValue(cacheKey, out WeatherData cachedData))
+            {
+                Console.WriteLine($"Cache hit for {cityName}");
+                return cachedData;
+            }
+
+            Console.WriteLine($"Cache miss for {cityName}, fetching from API");
+
             try
             {
                 var response = await _httpClient.GetAsync($"{_baseUrl}weather?q={cityName}&units=metric&appid={_apiKey}");
@@ -37,7 +51,14 @@ namespace WeatherAppNoi.Services
                     PropertyNameCaseInsensitive = true
                 });
 
-                return MapToWeatherData(weatherResponse);
+                var weatherData = MapToWeatherData(weatherResponse);
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(100));
+
+                _cache.Set(cacheKey, weatherData, cacheOptions);
+
+                return weatherData;
             }
             catch (Exception ex)
             {
@@ -116,6 +137,17 @@ namespace WeatherAppNoi.Services
 
         public async Task<ForecastData> GetForecastAsync(string cityName)
         {
+            string normalizedCityName = cityName.Trim().ToLowerInvariant();
+            string cacheKey = $"forecast_{normalizedCityName}";
+
+            if (_cache.TryGetValue(cacheKey, out ForecastData cachedData))
+            {
+                Console.WriteLine($"Cache hit for forecast {cityName}");
+                return cachedData;
+            }
+
+            Console.WriteLine($"Cache miss for forecast {cityName}, fetching from API");
+
             try
             {
                 // Use the 5-day/3-hour forecast API instead of One Call
@@ -132,7 +164,14 @@ namespace WeatherAppNoi.Services
                     PropertyNameCaseInsensitive = true
                 });
 
-                return MapToForecastDataFrom5Day(forecastResponse);
+                var forecastData = MapToForecastDataFrom5Day(forecastResponse);
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(100)); // Forecasts can be cached longer
+
+                _cache.Set(cacheKey, forecastData, cacheOptions);
+
+                return forecastData;
             }
             catch (Exception ex)
             {
