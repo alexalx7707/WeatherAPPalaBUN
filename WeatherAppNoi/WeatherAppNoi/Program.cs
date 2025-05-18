@@ -19,6 +19,7 @@ builder.Services.AddScoped<ThemeService>();
 
 // Register your WeatherService
 builder.Services.AddScoped<WeatherService>();
+builder.Services.AddMemoryCache();
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
